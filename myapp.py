@@ -12,6 +12,8 @@ from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.datasets import make_moons
 from sklearn.datasets import make_circles
 from sklearn.datasets import make_blobs
+from mlxtend.plotting import plot_decision_regions
+from sklearn.tree import plot_tree
 
 
 
@@ -201,6 +203,49 @@ if dataset == 'Make Moon':
 # Show the plot
     st.pyplot(fig)
 
+    n_classes = 2
+    plot_colors = "ry"
+    plot_step = 0.02
+    
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    
+
+    # Train
+    clf = DecisionTreeClassifier().fit(X, y)
+    DecisionBoundaryDisplay.from_estimator(
+            clf,
+            X,
+            cmap=plt.cm.RdYlBu,
+            response_method="predict",
+            ax=ax,
+        
+             )
+
+    # Plot the training points
+    for i, color in zip(range(n_classes), plot_colors):
+        idx = np.where(y == i)
+        ax.scatter(
+        X[idx, 0],
+        X[idx, 1],
+        c=color,
+        cmap=plt.cm.RdYlBu,
+        edgecolor="black",
+        s=15,
+            )
+
+    dy = plt.suptitle("Decision surface of decision trees")
+
+# Add the legend separately
+    leg = plt.legend(loc="lower right", borderpad=0, handletextpad=0)
+
+# Adjust the plot axes
+    _ = plt.axis("tight")
+
+# Display the plot
+    st.pyplot(fig)
+
+
 if dataset == 'Make Circles':
     criterion= st.sidebar.selectbox('Choose the criterion', ['gini', 'entropy', 'log_loss'])
     max_depth = st.sidebar.number_input('Maximum Depth Of Tree', min_value=1, value=3)
@@ -219,10 +264,54 @@ if dataset == 'Make Circles':
 # Show the plot
     st.pyplot(fig)
 
-if dataset =='Make Blobs':
+    n_classes = 2
+    plot_colors = "ry"
+    plot_step = 0.02
+    
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    
+
+    # Train
+    clf = DecisionTreeClassifier().fit(X, y)
+    DecisionBoundaryDisplay.from_estimator(
+            clf,
+            X,
+            cmap=plt.cm.RdYlBu,
+            response_method="predict",
+            ax=ax,
+        
+             )
+
+    # Plot the training points
+    for i, color in zip(range(n_classes), plot_colors):
+        idx = np.where(y == i)
+        ax.scatter(
+        X[idx, 0],
+        X[idx, 1],
+        c=color,
+        cmap=plt.cm.RdYlBu,
+        edgecolor="black",
+        s=15,
+            )
+
+    dy = plt.suptitle("Decision surface of decision trees")
+
+# Add the legend separately
+    leg = plt.legend(loc="lower right", borderpad=0, handletextpad=0)
+
+# Adjust the plot axes
+    _ = plt.axis("tight")
+
+# Display the plot
+    st.pyplot(fig)
+
+
+
+
+if dataset == 'Make Blobs':
     criterion= st.sidebar.selectbox('Choose the criterion', ['gini', 'entropy', 'log_loss'])
     max_depth = st.sidebar.number_input('Maximum Depth Of Tree', min_value=1, value=3)
-
     X, y = make_blobs(n_samples=100, centers=2, random_state=42)
 
 # Train a decision tree classifier
@@ -230,8 +319,19 @@ if dataset =='Make Blobs':
     clf.fit(X, y)
 
 # Plot the decision tree
+    
     fig = plt.figure(figsize=(10, 8))
-    _ = tree.plot_tree(clf, filled=True, feature_names=["x1", "x2"], class_names=["Class 0", "Class 1"])
+    _ = plot_tree(clf, filled=True, feature_names=["x1", "x2"], class_names=["Class 0", "Class 1"])
+
+# Show the plot
+    st.pyplot(fig)
+
+# Plot the decision boundary
+    fig = plt.figure(figsize=(10, 8))
+    plot_decision_regions(X, y, clf=clf, legend=2)
+    plt.xlabel('Feature 1')
+    plt.ylabel('Feature 2')
+    plt.title('Decision Boundary')
 
     st.pyplot(fig)
 
